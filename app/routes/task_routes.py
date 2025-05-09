@@ -1,6 +1,6 @@
 from flask import Blueprint, Response, abort, make_response, request
 from app.models.task import Task
-from .route_utilities import validate_model, create_model
+from .route_utilities import validate_model, create_model, get_models_with_filters
 from ..db import db
 
 bp = Blueprint("tasks_bp", __name__, url_prefix="/tasks")
@@ -13,7 +13,7 @@ def create_task():
 
 @bp.get("")
 def get_all_tasks():
-    pass
+    return get_models_with_filters(Task, request.args)
 
 @bp.get("/<id>")
 def get_one_task(id):
