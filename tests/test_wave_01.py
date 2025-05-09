@@ -1,6 +1,10 @@
+#from app.models.task import Task
 from app.models.task import Task
 from app.db import db
 import pytest
+
+import sys
+print(sys.path)
 
 
 @pytest.mark.skip(reason="No way to test this feature yet")
@@ -67,12 +71,13 @@ def test_get_task_not_found(client):
     # *****************************************************************
 
 
-@pytest.mark.skip(reason="No way to test this feature yet")
+#@pytest.mark.skip(reason="No way to test this feature yet")
 def test_create_task(client):
     # Act
     response = client.post("/tasks", json={
         "title": "A Brand New Task",
         "description": "Test Description",
+        "completed_at": None
     })
     response_body = response.get_json()
 
