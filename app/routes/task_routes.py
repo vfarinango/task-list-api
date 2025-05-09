@@ -17,12 +17,27 @@ def get_all_tasks():
 
 @bp.get("/<id>")
 def get_one_task(id):
-    pass
+    task = validate_model(Task, id)
+
+    return task.to_dict()
 
 @bp.put("/<id>")
 def update_task(id):
-    pass
+    task = validate_model(Task, id)
+    request_body = request.get_json()
+
+    for attribute, value in request_body.items():
+        if hasattr(Task, attribute):
+            setattr(task, attribute, value)
+
+    db.session.commit()
+    return Response(status=204, mimetype="application/json")
 
 @bp.delete("/<id>")
 def delete_task(id):
-    pass
+    task = validate_model(Task, id)
+
+    db.session.delete(task)
+    db.session.commit()
+
+    return Response(status=204, mimetype="application/json")
