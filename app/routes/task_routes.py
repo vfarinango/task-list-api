@@ -21,6 +21,7 @@ def get_one_task(id):
 
     return task.to_dict()
 
+
 @bp.put("/<id>")
 def update_task(id):
     task = validate_model(Task, id)

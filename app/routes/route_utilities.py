@@ -1,4 +1,5 @@
 from flask import abort, make_response
+from sqlalchemy import asc, desc
 from ..db import db
 
 def validate_model(cls, model_id):
@@ -32,15 +33,22 @@ def create_model(cls, model_data):
 
 def get_models_with_filters(cls, filters=None):
     query = db.select(cls)
+    order_by_clause = cls.id
 
     if filters:
-        for attribute, value in filters.items():
-            if hasattr(cls, attribute):
-                query = query.where(getattr(cls,attribute).ilike(f"%{value}%"))
+        for parameter, value in filters.items():
+            if parameter == "sort":
+                if value == "asc":
+                    order_by_clause = asc("title")
+                elif value == "desc":
+                    order_by_clause = desc("title")
+            elif hasattr(cls, parameter):
+                query = query.where(getattr(cls,parameter).ilike(f"%{value}%"))
     
-    models = db.session.scalars(query.order_by(cls.id))
+    models = db.session.scalars(query.order_by(order_by_clause))
     models_response = [model.to_dict() for model in models]
 
     return models_response
+
 
 
