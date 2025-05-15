@@ -1,5 +1,6 @@
 from flask import abort, make_response
 from sqlalchemy import asc, desc
+import requests
 from ..db import db
 
 def validate_model(cls, model_id):
@@ -17,6 +18,7 @@ def validate_model(cls, model_id):
         abort(make_response(not_found, 404))
 
     return model
+    
     
 
 def create_model(cls, model_data):
@@ -50,5 +52,15 @@ def get_models_with_filters(cls, filters=None):
 
     return models_response
 
+def call_slackbot(task_title):
+    url = "https://hooks.slack.com/services/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"
+    text = f"Someone just completed the task: {task_title}"
+
+    try:
+        response = requests.post(url=url,json={"text": text},timeout=5.0)
+        response.raise_for_status()
+    except Exception:
+        response = f"An unexpected error occured."
+        abort(make_response(response,400))
 
 

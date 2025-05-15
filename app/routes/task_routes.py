@@ -1,7 +1,8 @@
 from flask import Blueprint, Response, abort, make_response, request
+import requests
 from datetime import datetime
 from app.models.task import Task
-from .route_utilities import validate_model, create_model, get_models_with_filters
+from .route_utilities import validate_model, create_model, get_models_with_filters, call_slackbot
 from ..db import db
 
 bp = Blueprint("tasks_bp", __name__, url_prefix="/tasks")
@@ -20,7 +21,7 @@ def get_all_tasks():
 def get_one_task(id):
     task = validate_model(Task, id)
 
-    return task.to_dict()
+    return task.to_dict() 
 
 
 @bp.put("/<id>")
@@ -53,8 +54,12 @@ def modify_task_completion_status(id, completion_status):
 
     elif completion_status == 'mark_complete':
         task.completed_at = datetime.now()
+        #Send a slack message to channel (Someone just completed the task <Task.title>)
+        call_slackbot(completion_status, task.title)
+    else:
+        response = {"details": f"Route {completion_status} not recognized"}
+        abort(make_response(response,400))
 
     db.session.commit()
     
     return Response(status=204, mimetype="application/json")
-
