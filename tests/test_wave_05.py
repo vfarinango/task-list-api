@@ -25,10 +25,8 @@ def test_get_goals_one_saved_goal(client, one_goal):
     assert len(response_body) == 1
     assert response_body == [
         {
-            "goal": {
-                "id": 1,
-                "title": "Build a habit of going outside daily"
-            }
+            "id": 1,
+            "title": "Build a habit of going outside daily"
         }
     ]
 

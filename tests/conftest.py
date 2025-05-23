@@ -104,5 +104,5 @@ def one_task_belongs_to_one_goal(app, one_goal, one_task):
     goal_query = db.select(Goal).where(Goal.id == 1)
     task = db.session.scalar(task_query)
     goal = db.session.scalar(goal_query)
-    goal.tasks.append(task)
+    goal.task_ids.append(task)
     db.session.commit()

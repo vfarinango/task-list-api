@@ -29,12 +29,10 @@ def test_get_tasks_one_saved_tasks(client, one_task):
     assert len(response_body) == 1
     assert response_body == [
         {
-            "task": {
-                "id": 1,
-                "title": "Go on my daily walk 🏞",
-                "description": "Notice something new every day",
-                "is_complete": False
-                } 
+            "id": 1,
+            "title": "Go on my daily walk 🏞",
+            "description": "Notice something new every day",
+            "is_complete": False
         }
     ]
 

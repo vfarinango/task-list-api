@@ -54,7 +54,7 @@ def modify_task_completion_status(id, completion_status):
 
     elif completion_status == 'mark_complete':
         task.completed_at = datetime.now()
-        call_slackbot(completion_status, task.title)
+        call_slackbot(task.title)
     else:
         response = {"details": f"Route {completion_status} not recognized"}
         abort(make_response(response,400))
