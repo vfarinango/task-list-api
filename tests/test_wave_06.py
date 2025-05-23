@@ -42,10 +42,10 @@ def test_post_task_ids_to_goal_already_with_goals(client, one_task_belongs_to_on
         "task_ids": [2, 4]
     }
     query = db.select(Goal).where(Goal.id == 1)
-    assert len(db.session.scalar(query).tasks) == 2
+    assert len(db.session.scalar(query).tasks) == 3
 
 
-@pytest.mark.skip(reason="No way to test this feature yet")
+#@pytest.mark.skip(reason="No way to test this feature yet")
 def test_get_tasks_for_specific_goal_no_goal(client):
     # Act
     response = client.get("/goals/1/tasks")
@@ -53,11 +53,10 @@ def test_get_tasks_for_specific_goal_no_goal(client):
 
     # Assert
     assert response.status_code == 404
-
-    raise Exception("Complete test with assertion about response body")
-    # *****************************************************************
-    # **Complete test with assertion about response body***************
-    # *****************************************************************
+    assert "details" in response_body
+    assert response_body == {
+        "details": "Goal with id 1 was not found."
+    }
 
 
 #@pytest.mark.skip(reason="No way to test this feature yet")

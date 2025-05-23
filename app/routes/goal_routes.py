@@ -76,7 +76,7 @@ def get_tasks_of_one_goal(id):
         "title": goal.title,
         "tasks": tasks_response_list
     }
-
+    
     return jsonify(response_body), 200
     
 
