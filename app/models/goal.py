@@ -7,7 +7,7 @@ if TYPE_CHECKING:
 class Goal(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     title: Mapped[str]
-    task_ids: Mapped[list["Task"]] = relationship(back_populates="goal")
+    tasks: Mapped[list["Task"]] = relationship(back_populates="goal")
     
     def to_dict(self, with_tasks=False):
         goal_dict = {
@@ -18,7 +18,7 @@ class Goal(db.Model):
         }
 
         if with_tasks:
-            goal_dict["tasks"] = [task_id.to_dict()["task"] for task_id in self.task_ids]
+            goal_dict["tasks"] = [task.to_dict()["task"] for task in self.tasks]
         
         return goal_dict
     

@@ -68,7 +68,7 @@ def get_tasks_of_one_goal(id):
     goal = validate_model(Goal, id)
 
     tasks_response_list = []
-    for task in goal.task_ids:
+    for task in goal.tasks:
         tasks_response_list.append(task.to_dict()["task"])
 
     response_body = {

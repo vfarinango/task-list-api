@@ -22,7 +22,7 @@ def test_post_task_ids_to_goal(client, one_goal, three_tasks):
 
     # Check that Goal was updated in the db
     query = db.select(Goal).where(Goal.id == 1)
-    assert len(db.session.scalar(query).task_ids) == 3
+    assert len(db.session.scalar(query).tasks) == 3
 
 
 #@pytest.mark.skip(reason="No way to test this feature yet")
