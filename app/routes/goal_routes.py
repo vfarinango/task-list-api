@@ -1,7 +1,7 @@
 from flask import Blueprint, Response, request, jsonify
 import requests
 from app.models.goal import Goal
-from .route_utilities import validate_model, create_model, get_models_with_filters, validate_task_ids, get_tasks_from_ids
+from .route_utilities import validate_model, create_model, get_models_with_filters, get_validated_tasks_from_request_body
 from ..db import db
 
 bp = Blueprint("goals_bp", __name__, url_prefix="/goals")
@@ -47,18 +47,15 @@ def delete_goal(id):
 def add_tasks_to_goal(id):
     goal = validate_model(Goal, id)
     request_body = request.get_json()
-    task_ids_from_request_body = validate_task_ids(request_body)
     
-    tasks_to_add = get_tasks_from_ids(task_ids_from_request_body)
-
-    for task_object in tasks_to_add:
-        task_object.goal = goal
+    tasks_to_add = get_validated_tasks_from_request_body(request_body)
+    goal.tasks = tasks_to_add
     
     db.session.commit()
 
     response = {
         "id": goal.id,
-        "task_ids": task_ids_from_request_body
+        "task_ids": [task.id for task in tasks_to_add]
     }
 
     return jsonify(response), 200

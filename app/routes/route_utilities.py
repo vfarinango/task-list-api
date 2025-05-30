@@ -77,7 +77,7 @@ def call_slackbot(task_title):
 
 
 
-def validate_task_ids(request_body):
+def get_validated_tasks_from_request_body(request_body):
     try:
         if not request_body:
             response = {"details": "Request body is empty."}
@@ -89,12 +89,16 @@ def validate_task_ids(request_body):
             response = {"details": "'task_ids' must be a list."}
             abort(make_response(jsonify(response), 400))
         
+        validated_task_objects = []
         for task_id in task_ids_from_request:
             if not isinstance(task_id, int):
                 response = {"details": f"Each task ID must be an integer, but received {task_id}."}
                 abort(make_response(jsonify(response), 400))
+            
+            task_instance =  validate_model(Task, task_id)
+            validated_task_objects.append(task_instance)
         
-        return task_ids_from_request
+        return validated_task_objects     
     
     except KeyError:
         response = {"details": "Request body must contain 'task_ids'."}
@@ -104,11 +108,3 @@ def validate_task_ids(request_body):
         abort(make_response(jsonify(response), 400))
 
 
-def get_tasks_from_ids(task_ids_list):
-    task_models = []
-
-    for task_id in task_ids_list:
-        task_instance =  validate_model(Task, task_id)
-        task_models.append(task_instance)
-    return task_models
-    
